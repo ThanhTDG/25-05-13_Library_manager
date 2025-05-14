@@ -7,7 +7,12 @@ module.exports = {
 		path: path.resolve(__dirname, "dist"),
 	},
 	resolve: {
-		extensions: [".ts", ".js"],
+		fallback: {
+			fs: false, // Disable fs for browser builds
+			path: require.resolve("path-browserify"),
+			process: require.resolve("process/browser"),
+		},
+		extensions: [".ts", ".js", ".json"],
 	},
 	module: {
 		rules: [
@@ -15,6 +20,10 @@ module.exports = {
 				test: /\.ts$/,
 				use: "ts-loader",
 				exclude: /node_modules/,
+			},
+			{
+				test: /\.json$/,
+				type: "asset/source", // Use asset/source to load JSON as raw text
 			},
 		],
 	},

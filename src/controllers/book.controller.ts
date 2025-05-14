@@ -1,28 +1,52 @@
-import { CreatedBookForm } from '../forms/createdBook.form';
+import { BookForm } from '../views/forms/createdBook.form';
 import { Book } from '../models/book.model';
 import { BookService } from '../services/book.service'
 import { BookView } from '../views/book.view';
 export class BookController {
-    constructor(
-        private bookService: BookService,
-        private bookView: BookView
-    ) {
-        this.init()
+    private bookService: BookService;
+    private bookView: BookView;
+
+    constructor(bookService: BookService, bookView: BookView) {
+        this.bookService = bookService;
+        this.bookView = bookView;
+
+        this.init();
     }
 
     private init(): void {
-        this.bookView.setAddBookHandler(this.handleAddBook.bind(this));
         this.renderBooks();
-    }
-
-    private handleAddBook(formData: CreatedBookForm): void {
-        const newBook = Book.fromForm(formData);
-        this.bookService.create(newBook);
-        this.renderBooks();
+        this.bookView.setBookHandler(this.handleSaveBook.bind(this));
     }
 
     private renderBooks(): void {
         const books = this.bookService.getAll();
-        this.bookView.renderBooks(books);
+        this.bookView.renderBooks(
+            books,
+            this.handleRowClick.bind(this),
+            this.handleDeleteBook.bind(this)
+        );
+    }
+
+    private handleRowClick(book: Book): void {
+        this.bookView.populateForm(book);
+    }
+
+    private handleSaveBook(updatedBook: Book): void {
+        const existingBook = this.bookService.getById(updatedBook.id);
+        if (existingBook) {
+            this.bookService.update(updatedBook.id, updatedBook);
+        } else {
+            this.bookService.create(updatedBook);
+        }
+        this.renderBooks();
+    }
+
+    private handleDeleteBook(bookId: string): void {
+        const isDeleted = this.bookService.delete(bookId);
+        if (isDeleted) {
+            this.renderBooks();
+        } else {
+            alert("Failed to delete the book.");
+        }
     }
 }
