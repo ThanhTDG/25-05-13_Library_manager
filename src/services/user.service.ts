@@ -4,6 +4,16 @@ import { User } from "../models/user.model";
 
 export class UserService implements IBaseService<User> {
     private users: User[] = []
+    private static instance: UserService;
+    private constructor() {
+    
+    }
+    static getInstance(): UserService {
+        if(!UserService.instance){
+            UserService.instance = new UserService()
+        }
+        return UserService.instance
+    }
     getAll(): User[] {
         return this.users
     }

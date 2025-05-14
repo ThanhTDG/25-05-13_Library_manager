@@ -1,14 +1,14 @@
 import { CreatedBookForm } from "../forms/createdBook.form";
 import Audio from "./audio";
 
-export interface Ibook {
+export interface IBook {
     id: string;
     title: string;
     author: string;
     availableCopies: number;
 }
 
-export class Book implements Ibook {
+export class Book implements IBook {
     id: string;
     title: string;
     author: string;

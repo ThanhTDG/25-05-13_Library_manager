@@ -1,6 +1,6 @@
 import { BookController } from "../controllers/book.controller";
 import { CreatedBookForm } from "../forms/createdBook.form";
-import { Ibook as IBook } from "../models/book.model";
+import { IBook as IBook } from "../models/book.model";
 
 export class BookView {
 
@@ -13,13 +13,13 @@ export class BookView {
                 const author = ((document.getElementById("author")) as HTMLInputElement).value
                 const year = ((document.getElementById("year")) as HTMLInputElement).value
                 const formData: CreatedBookForm = { title, author, year }
-                handle(formData)
+                handle(formData) 
             })
         }
     }
 
     renderBooks(bookList: IBook[]): void {
-        const tableElement = document.getElementById('bookTable');
+        const tableElement = document.getElementById('book-table');
         if (!tableElement)
             return;
         tableElement.innerHTML = ''
@@ -50,7 +50,6 @@ export class BookView {
             row.appendChild(yearCell)
 
             tableElement.appendChild(row);
-
         })
     }
 }

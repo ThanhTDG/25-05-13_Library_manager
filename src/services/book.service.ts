@@ -5,9 +5,8 @@ import { Book } from "../models/book.model";
 export class BookService implements IBaseService<Book> {
     private static instance: BookService;
     private constructor() {
-        console.log("")
     }
-    static getInstace(): BookService {
+    static getInstance(): BookService {
         if (!BookService.instance) {
             BookService.instance = new BookService()
         }
