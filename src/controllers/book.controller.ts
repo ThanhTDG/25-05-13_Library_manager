@@ -1,7 +1,9 @@
-import { BookForm } from '../views/forms/createdBook.form';
 import { Book } from '../models/book.model';
 import { BookService } from '../services/book.service'
+import { Singleton } from '../singleton';
 import { BookView } from '../views/book.view';
+
+@Singleton
 export class BookController {
     private bookService: BookService;
     private bookView: BookView;
@@ -28,7 +30,7 @@ export class BookController {
             this.handleDeleteBook.bind(this)
         );
     }
-    
+
 
     private handleRowClick(book: Book): void {
         this.bookView.populateForm(book);

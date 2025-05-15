@@ -1,4 +1,4 @@
-#book-dialog {
+#dialog-book {
     min-width: 500px;
     border-radius: 8px;
     padding: 24px 32px;
@@ -6,16 +6,19 @@
     background: #fff;
 }
 
-#book-form {
+#form-book {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
-#form-book-id,#form-book-available-copies {
-    user-select: none;      
-    pointer-events: none;  
-    background: #ecececdc;    
+
+#form-book-id,
+#form-book-available-copies {
+    user-select: none;
+    pointer-events: none;
+    background: #ecececdc;
 }
+
 #create-book {
     display: flex;
     justify-content: flex-end;

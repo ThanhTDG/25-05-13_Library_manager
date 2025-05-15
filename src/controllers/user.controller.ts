@@ -1,7 +1,10 @@
-import { User,IUser } from '../models/user.model';
+import { User, IUser } from '../models/user.model';
 import { UserService } from '../services/user.service';
+import { Singleton } from '../singleton';
 import { UserView } from '../views/user.view';
 
+
+@Singleton
 export class UserController {
     private userService: UserService;
     private userView: UserView;
@@ -22,15 +25,20 @@ export class UserController {
 
     private renderUsers(): void {
         const users = this.userService.getAll();
-        this.userView.renderUsers(users, this.handleRowClick.bind(this), this.handleDeleteUser.bind(this));
+        console.log(users)
+        this.userView.renderUsers(users, this.hanldeRowClick.bind(this), this.handleDeleteUser.bind(this))
+    }
+    private hanldeRowClick(user: User): void {
+        this.userView.populateForm(user);
     }
 
-    private handleSaveUser(newUser: User): void {
-        const existingUser = this.userService.getById(newUser.id);
+
+    private handleSaveUser(user: User): void {
+        const existingUser = this.userService.getById(user.id);
         if (existingUser) {
-            this.userService.update(newUser.id, newUser);
+            this.userService.update(user.id, user);
         } else {
-            this.userService.create(newUser);
+            this.userService.create(user);
         }
         this.renderUsers();
     }

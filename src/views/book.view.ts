@@ -1,9 +1,10 @@
 import { IBook as IBook } from "../models/book.model";
+import { getButtonById, getDialogElementById, getFormElementById, getInputElementById } from "./utils.view";
 
 export class BookView {
-    static readonly ELEMENTS_ID = {
-        BOOK_DIALOG: "book-dialog",
-        BOOK_FORM: "book-form",
+    static readonly ELEMENT_IDS = {
+        BOOK_DIALOG: "dialog-book",
+        BOOK_FORM: "form-book",
         FORM_ID: "form-book-id",
         FORM_TITLE: "form-book-title",
         FORM_AUTHOR: "form-book-author",
@@ -11,53 +12,42 @@ export class BookView {
         FORM_AVAILABLE_COPIES: "form-book-available-copies",
         FORM_TOTAL_COPIES: "form-book-total-copies",
         BTN_TRIGGER_CREATE_BOOK: "btn-trigger-create-book",
-        BTN_SAVE_BOOK_FORM: "btn-save-book-form",
-        BTN_CANCEL_BOOK_FORM: "btn-cancel-book-form",
-    } 
+        BTN_SAVE_BOOK_FORM: "btn-save-form-book",
+        BTN_CANCEL_BOOK_FORM: "btn-cancel-form-book",
+    }
     static readonly ELEMENTS_CLASS = {
-        BTN_DELETE_BOOK: "delete-book-button",
+        BTN_DELETE_BOOK: "btn-delete-book",
     }
-    getBookDialog(): HTMLDialogElement {
-        const ELEMENTS_ID = BookView.ELEMENTS_ID;
-        const dialog = document.getElementById(ELEMENTS_ID.BOOK_DIALOG) as HTMLDialogElement;
-        if (!dialog) {
-            throw new Error("Dialog not found");
-        }
-        return dialog;
+    getUserDialog(): HTMLDialogElement {
+        return getDialogElementById(BookView.ELEMENT_IDS.BOOK_DIALOG);
     }
-    getBookForm(): HTMLFormElement {
-        const ELEMENTS_ID = BookView.ELEMENTS_ID;
-        const form = document.getElementById(ELEMENTS_ID.BOOK_FORM) as HTMLFormElement;
-        if (!form) {
-            throw new Error("Form not found");
-        }
-        return form;
+    getUserForm(): HTMLFormElement {
+        return getFormElementById(BookView.ELEMENT_IDS.BOOK_FORM)
     }
-    getInputElementById(id: string): HTMLInputElement {
-        return document.getElementById(id) as HTMLInputElement;
-    }
+
+
     setBookHandler(handle: (formData: IBook) => void): void {
-        const ELEMENTS_ID = BookView.ELEMENTS_ID;
-        const dialog = this.getBookDialog();
-        const form = this.getBookForm();
+        const ELEMENTS_ID = BookView.ELEMENT_IDS;
+        const dialog = this.getUserDialog();
+        const form = this.getUserForm();
         if (form) {
             form.addEventListener("submit", (event) => {
                 event.preventDefault();
-                let id = this.getInputElementById(ELEMENTS_ID.FORM_ID).value;
-                const title = this.getInputElementById(ELEMENTS_ID.FORM_TITLE).value;
-                const author = this.getInputElementById(ELEMENTS_ID.FORM_AUTHOR).value;
-                const isbn = this.getInputElementById(ELEMENTS_ID.FORM_ISBN).value;
-                const totalCopies = this.getInputElementById(ELEMENTS_ID.FORM_TOTAL_COPIES).valueAsNumber;
-                let availableCopies = this.getInputElementById(ELEMENTS_ID.FORM_AVAILABLE_COPIES).valueAsNumber;
-                if(!id || id.trim() === ""){
+                let id = getInputElementById(ELEMENTS_ID.FORM_ID).value;
+                const title = getInputElementById(ELEMENTS_ID.FORM_TITLE).value;
+                const author = getInputElementById(ELEMENTS_ID.FORM_AUTHOR).value;
+                const isbn = getInputElementById(ELEMENTS_ID.FORM_ISBN).value;
+                const totalCopies = getInputElementById(ELEMENTS_ID.FORM_TOTAL_COPIES).valueAsNumber;
+                let availableCopies = getInputElementById(ELEMENTS_ID.FORM_AVAILABLE_COPIES).valueAsNumber;
+                if (!id || id.trim() === "") {
                     availableCopies = totalCopies;
                     id = Date.now().toString();
                 }
-                if(availableCopies > totalCopies){
+                if (availableCopies > totalCopies) {
                     alert("Available copies cannot be greater than total copies");
                     return;
                 }
-           
+
                 const formData: IBook = {
                     id,
                     title,
@@ -72,29 +62,29 @@ export class BookView {
         }
     }
     handleShowCreateBookForm(): void {
-         const ELEMENTS_ID = BookView.ELEMENTS_ID;
-        const dialog = this.getBookDialog();
-        const form = this.getBookForm();
+        const ELEMENTS_ID = BookView.ELEMENT_IDS;
+        const dialog = this.getUserDialog();
+        const form = this.getUserForm();
         if (form) {
             form.reset();
         }
         dialog.showModal();
     }
     bindCreateBookFormEvent(): void {
-         const ELEMENTS_ID = BookView.ELEMENTS_ID;
-        const btnOpenFormCreate = document.getElementById(ELEMENTS_ID.BTN_TRIGGER_CREATE_BOOK) as HTMLButtonElement;
+        const ELEMENTS_ID = BookView.ELEMENT_IDS;
+        const btnOpenFormCreate = getButtonById(ELEMENTS_ID.BTN_TRIGGER_CREATE_BOOK);
         btnOpenFormCreate.addEventListener('click', () => {
             this.handleShowCreateBookForm();
         });
     }
-    bindCancelBookFormEvent(): void{
-        const ELEMENTS_ID = BookView.ELEMENTS_ID;
-        const cancelDialogButton = document.getElementById(ELEMENTS_ID.BTN_CANCEL_BOOK_FORM) as HTMLButtonElement;
-        const form = this.getBookForm();
-        if(cancelDialogButton){
+    bindCancelBookFormEvent(): void {
+        const ELEMENTS_ID = BookView.ELEMENT_IDS;
+        const cancelDialogButton = getButtonById(ELEMENTS_ID.BTN_CANCEL_BOOK_FORM);
+        const form = this.getUserForm();
+        if (cancelDialogButton) {
             cancelDialogButton.addEventListener('click', () => {
-                const dialog = this.getBookDialog();
-                if(form){
+                const dialog = this.getUserDialog();
+                if (form) {
                     form.reset();
                 }
                 dialog.close();
@@ -104,14 +94,14 @@ export class BookView {
 
 
     populateForm(book: IBook): void {
-        const ELEMENTS_ID = BookView.ELEMENTS_ID;
-        const dialog = this.getBookDialog();
-        this.getInputElementById(ELEMENTS_ID.FORM_ID).value = book.id;
-        this.getInputElementById(ELEMENTS_ID.FORM_TITLE).value = book.title;
-        this.getInputElementById(ELEMENTS_ID.FORM_AUTHOR).value = book.author;
-        this.getInputElementById(ELEMENTS_ID.FORM_ISBN).value = book.isbn;
-        this.getInputElementById(ELEMENTS_ID.FORM_AVAILABLE_COPIES).valueAsNumber = book.availableCopies;
-        this.getInputElementById(ELEMENTS_ID.FORM_TOTAL_COPIES).valueAsNumber = book.totalCopies;
+        const ELEMENTS_ID = BookView.ELEMENT_IDS;
+        const dialog = this.getUserDialog();
+        getInputElementById(ELEMENTS_ID.FORM_ID).value = book.id;
+        getInputElementById(ELEMENTS_ID.FORM_TITLE).value = book.title;
+        getInputElementById(ELEMENTS_ID.FORM_AUTHOR).value = book.author;
+        getInputElementById(ELEMENTS_ID.FORM_ISBN).value = book.isbn;
+        getInputElementById(ELEMENTS_ID.FORM_AVAILABLE_COPIES).valueAsNumber = book.availableCopies;
+        getInputElementById(ELEMENTS_ID.FORM_TOTAL_COPIES).valueAsNumber = book.totalCopies;
         dialog.showModal();
     }
 
@@ -119,7 +109,6 @@ export class BookView {
         const ELEMENTS_CLASS = BookView.ELEMENTS_CLASS;
         const tableBody = document.querySelector("#book-table tbody");
         if (!tableBody) return;
-
         tableBody.innerHTML = "";
 
         bookList.forEach((book) => {
@@ -144,4 +133,5 @@ export class BookView {
             tableBody.appendChild(row);
         });
     }
+
 }
