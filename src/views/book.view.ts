@@ -1,5 +1,3 @@
-import { BookController } from "../controllers/book.controller";
-import { BookForm } from "./forms/createdBook.form";
 import { IBook as IBook } from "../models/book.model";
 
 export class BookView {
