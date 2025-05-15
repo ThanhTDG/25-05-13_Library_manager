@@ -15,6 +15,8 @@ export class BookController {
 
     private init(): void {
         this.renderBooks();
+        this.bookView.bindCreateBookFormEvent();
+        this.bookView.bindCancelBookFormEvent();
         this.bookView.setBookHandler(this.handleSaveBook.bind(this));
     }
 
@@ -26,6 +28,7 @@ export class BookController {
             this.handleDeleteBook.bind(this)
         );
     }
+    
 
     private handleRowClick(book: Book): void {
         this.bookView.populateForm(book);

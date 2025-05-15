@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-	entry: "./src/index.ts", // Replace with your main TypeScript file
+	entry: "./index.ts", // Replace with your main TypeScript file
 	output: {
 		filename: "bundle.js",
 		path: path.resolve(__dirname, "dist"),

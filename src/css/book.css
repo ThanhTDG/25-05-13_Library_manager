@@ -1,0 +1,23 @@
+#book-dialog {
+    min-width: 500px;
+    border-radius: 8px;
+    padding: 24px 32px;
+    box-shadow: 0 4px 24px rgba(21, 8, 168, 0.15);
+    background: #fff;
+}
+
+#book-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+#form-book-id,#form-book-available-copies {
+    user-select: none;      
+    pointer-events: none;  
+    background: #ecececdc;    
+}
+#create-book {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
