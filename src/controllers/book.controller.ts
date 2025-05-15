@@ -11,7 +11,6 @@ export class BookController {
     constructor(bookService: BookService, bookView: BookView) {
         this.bookService = bookService;
         this.bookView = bookView;
-
         this.init();
     }
 
