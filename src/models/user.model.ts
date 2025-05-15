@@ -1,3 +1,5 @@
+import { generateId } from "../utils";
+
 export interface IUser {
     id: string;
     name: string;
@@ -6,17 +8,25 @@ export interface IUser {
 }
 
 export class User implements IUser {
-    id: string;
-    name: string;
-    dayCreated: Date;
-    borrowedBookIds: string[];
+    public name: string;
+    public id: string;
+    public dayCreated: Date;
+    public borrowedBookIds: string[];
 
-    constructor(id: string, name: string, dayCreated: Date, borrowedBookIds: string[] = []) {
+    constructor(id: string, name: string, dateCreated: Date, borrowedBookIds: string[] = []) {
         this.id = id;
         this.name = name;
-        this.dayCreated = dayCreated;
-        this.borrowedBookIds = borrowedBookIds;
+        this.dayCreated = dateCreated;
+        this.borrowedBookIds = borrowedBookIds
     }
+    static formIUser(user: Partial<IUser>): User {
+        const id = user.id || generateId();
+        const name = user.name || "Unknown";
+        const dayCreated = user.dayCreated ? new Date(user.dayCreated) : new Date();
+        const borrowedBookIds = user.borrowedBookIds || [];
+        return new User(id, name, dayCreated, borrowedBookIds);
+    }
+
     borrowBook(bookId: string): void {
         if (!this.borrowedBookIds.includes(bookId)) {
             this.borrowedBookIds.push(bookId)
@@ -28,5 +38,6 @@ export class User implements IUser {
             this.borrowedBookIds.slice(index, 1)
         }
     }
+
 
 }

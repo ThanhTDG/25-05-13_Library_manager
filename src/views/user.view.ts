@@ -1,93 +1,105 @@
-import { IUser } from "../models/user.model";
+import { IUser, User } from "../models/user.model";
+import { dateToString, stringToDate } from "../utils";
+import { getButtonById, getDialogElementById, getElementById, getFormElementById, getInputElementById } from "./utils.view";
 
 export class UserView {
-    static readonly ELEMENTS_ID = {
-        USER_DIALOG: "user-dialog",
-        USER_FORM: "create-user-form",
-        FORM_NAME: "name",
+    static readonly ELEMENTS_IDS = {
+        DIALOG_USER: "dialog-user",
+        TABLE_USER: "table-user",
+        FORM_USER: "form-user",
+        FROM_USER_ID: "form-user-id",
+        FORM_NAME: "form-user-name",
+        FORM_DATE_USER_CREATED: "form-date-create-user",
         BTN_TRIGGER_CREATE_USER: "btn-trigger-create-user",
-        BTN_SAVE_USER_FORM: "btn-save-user-form",
-        BTN_CANCEL_USER_FORM: "btn-cancel-user-form",
+        BTN_SAVE_USER_FORM: "btn-save-form-user",
+        BTN_CANCEL_USER_FORM: "btn-cancel-form-user",
     };
+    static readonly ELEMENT_CLASSES = {
+        BTN_DELETE_USER: "btn-delete-user",
+    }
 
     getUserDialog(): HTMLDialogElement {
-        const dialog = document.getElementById(UserView.ELEMENTS_ID.USER_DIALOG) as HTMLDialogElement;
-        if (!dialog) throw new Error("User dialog not found");
-        return dialog;
+        return getDialogElementById(UserView.ELEMENTS_IDS.DIALOG_USER);
     }
-    renderUsers(users: IUser[], handleRowClick: (user: IUser) => void, handleDeleteUser: (userId: string) => void): void {
-        const userTableBody = document.getElementById("user-table-body") as HTMLTableSectionElement;
-        userTableBody.innerHTML = "";
+    getUserForm(): HTMLFormElement {
+        return getFormElementById(UserView.ELEMENTS_IDS.FORM_USER)
+    }
+
+    renderUsers(users: User[], handleRowClick: (user: User) => void, handleDeleteUser: (userId: string) => void): void {
+        const ELEMENTS_CLASS = UserView.ELEMENT_CLASSES;
+        const ELEMENT_IDS = UserView.ELEMENTS_IDS;
+        const userTable = getElementById(ELEMENT_IDS.TABLE_USER)
+        if (!userTable) return;
+        let userTableBody = userTable.querySelector("tbody")
+        if (!userTableBody)
+            userTableBody = new HTMLTableSectionElement()
+        userTableBody.innerHTML = ""
         users.forEach((user) => {
             const row = document.createElement("tr");
             row.innerHTML = `
+                <td>${user.id}</td>
                 <td>${user.name}</td>
-                <td>${user.dayCreated.toLocaleDateString()}</td>
+                <td>${dateToString(user.dayCreated)}</td>
                 <td>
-                    <button class="delete-user-button" data-id="${user.id}">Delete</button>
+                    <button class=${ELEMENTS_CLASS.BTN_DELETE_USER} data-id="${user.id}">Delete</button>
                 </td>
             `;
+            const deleteButton = row.querySelector(`.${ELEMENTS_CLASS.BTN_DELETE_USER}`) as HTMLButtonElement;
+            deleteButton.addEventListener("click", (event) => {
+                event.stopPropagation();
+                handleDeleteUser(user.id);
+            });
             row.addEventListener("click", () => handleRowClick(user));
             userTableBody.appendChild(row);
         });
-        const deleteButtons = document.querySelectorAll(`.${UserView.ELEMENTS_ID.BTN_DELETE_USER}`);
-        deleteButtons.forEach((button) => {
-            button.addEventListener("click", (event) => {
-                event.stopPropagation();
-                const userId = (event.target as HTMLButtonElement).dataset.id;
-                if (userId) handleDeleteUser(userId);
-            });
-        });
+
+    }
+    populateForm(user: User): void {
+        const ELEMENT_IDS = UserView.ELEMENTS_IDS;
+        const dialog = this.getUserDialog();
+        getInputElementById(ELEMENT_IDS.FROM_USER_ID).value = user.id
+        getInputElementById(ELEMENT_IDS.FORM_NAME).value = user.name
+        getInputElementById(ELEMENT_IDS.FORM_DATE_USER_CREATED).value = dateToString(user.dayCreated)
+        dialog.showModal()
     }
 
-    getUserForm(): HTMLFormElement {
-        const form = document.getElementById(UserView.ELEMENTS_ID.USER_FORM) as HTMLFormElement;
-        if (!form) throw new Error("User form not found");
-        return form;
-    }
 
-    getInputElementById(id: string): HTMLInputElement {
-        return document.getElementById(id) as HTMLInputElement;
-    }
-
-   setAddUserHandler(handle: (formData: IUser) => void): void {
+    setAddUserHandler(handle: (formData: User) => void): void {
+        const ELEMENTS_ID = UserView.ELEMENTS_IDS
         const form = this.getUserForm();
         const dialog = this.getUserDialog();
         form.onsubmit = null;
         form.addEventListener("submit", (event) => {
             event.preventDefault();
-            const name = this.getInputElementById(UserView.ELEMENTS_ID.FORM_NAME).value.trim();
-            if (!name) {
-                alert("Name is required!");
-                return;
-            }
-            const formData: IUser = {
-                id: Date.now().toString(),
-                name,
-                dayCreated: new Date(),
-                borrowedBookIds: []
-            };
-            handle(formData);
+            let formData: Partial<IUser> = {};
+            formData.id = getInputElementById(ELEMENTS_ID.FROM_USER_ID).value
+            formData.name = getInputElementById(ELEMENTS_ID.FORM_NAME).value.trim();
+            const dayCreatedInput = getInputElementById(ELEMENTS_ID.FORM_DATE_USER_CREATED).value;
+            formData.dayCreated = stringToDate(dayCreatedInput)
+            handle(User.formIUser(formData));
             dialog.close();
-        }, { once: true });
+        });
     }
 
     handleShowCreateUserForm(): void {
+        const DayCreateElementId = UserView.ELEMENTS_IDS.FORM_DATE_USER_CREATED
         const dialog = this.getUserDialog();
         const form = this.getUserForm();
         if (form) form.reset();
+        const dayCreateElement: HTMLInputElement = getInputElementById(DayCreateElementId);
+        dayCreateElement.value = dateToString(new Date(Date.now()))
         dialog.showModal();
     }
 
     bindCreateUserFormEvent(): void {
-        const btnOpenFormCreate = document.getElementById(UserView.ELEMENTS_ID.BTN_TRIGGER_CREATE_USER) as HTMLButtonElement;
+        const btnOpenFormCreate = getButtonById(UserView.ELEMENTS_IDS.BTN_TRIGGER_CREATE_USER);
         btnOpenFormCreate?.addEventListener('click', () => {
             this.handleShowCreateUserForm();
         });
     }
 
     bindCancelUserFormEvent(): void {
-        const cancelDialogButton = document.getElementById(UserView.ELEMENTS_ID.BTN_CANCEL_USER_FORM) as HTMLButtonElement;
+        const cancelDialogButton = getButtonById(UserView.ELEMENTS_IDS.BTN_CANCEL_USER_FORM);
         const form = this.getUserForm();
         if (cancelDialogButton) {
             cancelDialogButton.addEventListener('click', () => {
