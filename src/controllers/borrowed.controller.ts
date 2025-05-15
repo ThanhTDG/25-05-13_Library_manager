@@ -6,6 +6,7 @@ import { BorrowedView } from "../views/borrowed.view";
 import { Singleton } from "../singleton";
 import { IBorrowedBookDetails } from "../interfaces/borrowedBook.interface";
 import { generateId } from "../utils";
+import { ISelectOption } from "../interfaces/select.interface";
 
 @Singleton
 export class BorrowedController {
@@ -68,21 +69,29 @@ export class BorrowedController {
 	}
 
 	private bindCreateBorrow(): void {
-		const bookOptions = this.bookService.getAll().map((book) => {
-			return {
-				id: book.id,
-				displayString: book.title,
-			};
-		});
-		const userOptions = this.userService.getAll().map((user) => {
-			return {
-				id: user.id,
-				displayString: user.name,
-			};
-		});
 		this.borrowedView.bindCreateBorrowFormEvent(
-			(() => userOptions).bind(this),
-			(() => bookOptions).bind(this)
+			() => this.getBookOptions(),
+			() => this.getUserOptions()
+		);
+	}
+
+	private getBookOptions(): ISelectOption[] {
+		return this.bookService.getAll().map(
+			(book) =>
+				<ISelectOption>{
+					id: book.id,
+					displayString: book.title,
+				}
+		);
+	}
+
+	private getUserOptions(): ISelectOption[] {
+		return this.userService.getAll().map(
+			(user) =>
+				<ISelectOption>{
+					id: user.id,
+					displayString: user.name,
+				}
 		);
 	}
 
