@@ -1,7 +1,8 @@
 import { BorrowedBookStatus } from "../enums/borrowBook.enum";
 import { IBorrowedBookDetails } from "../interfaces/borrowedBook.interface";
 import { ISelectOption } from "../interfaces/select.interface";
-import { dateToString } from "../utils";
+import { BorrowedBook } from "../models/borrowedBook.model";
+import { dateToString, stringToDate } from "../utils";
 import {
 	enumToOptions,
 	fillOptions,
@@ -126,8 +127,15 @@ export class BorrowedView {
 			borrowedBook.bookTitle
 		);
 
-		const borrowStatus = this.getBorrowedStatusForm();
-		if (borrowStatus) borrowStatus.value = borrowedBook.status;
+		let statusSelect = this.getBorrowedStatusForm();
+		if (statusSelect) {
+			statusSelect.value = borrowedBook.status;
+			if (borrowedBook.status === BorrowedBookStatus.BORROWING) {
+				statusSelect.disabled = false;
+			} else {
+				statusSelect.disabled = true;
+			}
+		}
 
 		getInputElementById(ELEMENTS_ID.FORM_BORROW_ID).value = borrowedBook.id;
 		getInputElementById(ELEMENTS_ID.FORM_BORROW_DATE).value = dateToString(
@@ -137,14 +145,22 @@ export class BorrowedView {
 		this.getBorrowDialog().showModal();
 	}
 
-	private collectFormData(): any {
+	private collectFormData(): BorrowedBook {
 		const ELEMENTS_ID = BorrowedView.ELEMENT_IDS;
-		return {
+		const statusValue = getSelectElementById(
+			ELEMENTS_ID.FORM_BORROW_STATUS
+		)?.value;
+		const status = Object.values(BorrowedBookStatus).includes(
+			statusValue as BorrowedBookStatus
+		)
+			? (statusValue as BorrowedBookStatus)
+			: BorrowedBookStatus.BORROWING;
+		return <BorrowedBook>{
 			id: getInputElementById(ELEMENTS_ID.FORM_BORROW_ID).value,
-			bookId: getSelectElementById(ELEMENTS_ID.FORM_BORROW_BOOK)?.value,
-			userId: getSelectElementById(ELEMENTS_ID.FORM_BORROW_USER)?.value,
-			status: getSelectElementById(ELEMENTS_ID.FORM_BORROW_STATUS)?.value,
-			borrowDate: new Date(
+			bookId: getSelectElementById(ELEMENTS_ID.FORM_BORROW_BOOK)?.value || "",
+			userId: getSelectElementById(ELEMENTS_ID.FORM_BORROW_USER)?.value || "",
+			status: status,
+			borrowDay: stringToDate(
 				getInputElementById(ELEMENTS_ID.FORM_BORROW_DATE).value
 			),
 		};
@@ -180,7 +196,10 @@ export class BorrowedView {
 			bookSelect.disabled = false;
 		}
 
-		this.getBorrowedStatusForm();
+		let statusSelect = this.getBorrowedStatusForm();
+		if (statusSelect) {
+			statusSelect.disabled = true;
+		}
 	}
 
 	private getBorrowedStatusForm(): HTMLSelectElement | null {

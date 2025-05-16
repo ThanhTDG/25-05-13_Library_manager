@@ -40,11 +40,12 @@ export function saveToLocalStorage(key: string, data: any): void {
 }
 
 export function loadFromLocalStorage<T>(key: string): T | null {
+	const data = localStorage.getItem(key);
+	if (!data) return null;
 	try {
-		const jsonData = localStorage.getItem(key);
-		return jsonData ? (JSON.parse(jsonData) as T) : null;
+		return JSON.parse(data) as T;
 	} catch (error) {
-		console.error("Failed to load from localStorage:", error);
+		console.error("Failed to parse localStorage data:", error);
 		return null;
 	}
 }

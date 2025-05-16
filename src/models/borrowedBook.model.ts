@@ -10,10 +10,10 @@ export class BorrowedBook {
 	status: BorrowedBookStatus;
 
 	constructor(
-		id: string = generateId(),
 		bookId: string,
 		userId: string,
-		borrowDay: Date = new Date(),
+		id: string = generateId(),
+		borrowDay: Date = new Date(Date.now()),
 		status: BorrowedBookStatus = BorrowedBookStatus.BORROWING,
 		updatedDate?: Date
 	) {
@@ -23,5 +23,12 @@ export class BorrowedBook {
 		this.borrowDay = borrowDay;
 		this.updatedDate = updatedDate;
 		this.status = status;
+	}
+	updateDate(): void {
+		if (this.status !== BorrowedBookStatus.BORROWING) {
+			this.updatedDate = new Date(Date.now());
+		} else {
+			this.updatedDate = undefined;
+		}
 	}
 }

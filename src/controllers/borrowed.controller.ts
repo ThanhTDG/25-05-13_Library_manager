@@ -100,13 +100,25 @@ export class BorrowedController {
 	}
 
 	private handleSaveBorrow(updateBorrow: BorrowedBook): void {
-		const existingBook = this.bookService.getById(updateBorrow.id);
+		const existed = this.borrowedBookService.getById(updateBorrow.id);
+		const borrowInstance = new BorrowedBook(
+			updateBorrow.bookId,
+			updateBorrow.userId,
+			updateBorrow.id,
+			updateBorrow.borrowDay,
+			updateBorrow.status,
+			updateBorrow.updatedDate
+		);
 		console.log(updateBorrow);
-		if (existingBook) {
-			this.borrowedBookService.update(updateBorrow.id, updateBorrow);
+
+		if (existed) {
+			if (borrowInstance.status != existed.status) {
+				borrowInstance.updateDate();
+			}
+			this.borrowedBookService.update(updateBorrow.id, borrowInstance);
 		} else {
-			updateBorrow.id = generateId();
-			this.borrowedBookService.create(updateBorrow);
+			borrowInstance.id = generateId();
+			this.borrowedBookService.create(borrowInstance);
 		}
 		this.renderBorrowedBooks();
 	}
