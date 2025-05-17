@@ -1,4 +1,4 @@
-export enum BorrowedBookStatus {
+export enum BorrowedStatus {
 	BORROWING = "Borrowing",
 	RETURNED = "Returned",
 }

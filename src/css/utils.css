@@ -27,6 +27,29 @@
     box-sizing: border-box;
     height: 38px;
 }
+input[type="datetime-local"] {
+    flex: unset;
+    padding: 8px 12px;
+    border: 1.5px solid #bdbdbd;
+    border-radius: 6px;
+    font-size: 16px;
+    background: #f7fafd;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    height: 38px;
+}
+
+input[type="datetime-local"]:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+    outline: none;
+}
+
+input[type="datetime-local"]:disabled {
+    background: #ecececdc;
+    color: #999;
+    cursor: not-allowed;
+}
 
 menu {
     display: flex;
@@ -73,3 +96,11 @@ menu button:hover {
     background: #1251a3;
 }
 
+dialog {
+    min-width: 500px;
+    max-width: 600px;
+    border-radius: 8px;
+    padding: 24px 32px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+    background: #fff;
+}

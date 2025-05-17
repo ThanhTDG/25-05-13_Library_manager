@@ -1,53 +1,60 @@
 import { saveToLocalStorage, loadFromLocalStorage } from "../utils";
+
 export interface IBaseService<T> {
-	create(item: T): void;
+	create(item: T): T;
 	getById(id: string): T | undefined;
 	update(id: string, updatedItem: T): boolean;
 	delete(id: string): boolean;
 	getAll(): T[];
 }
-export class BaseService<T> implements IBaseService<T> {
-	private array: T[] = [];
-	private storageKey: string;
 
-	constructor(storageKey: string) {
+export class BaseService<T extends { id: string }> implements IBaseService<T> {
+	protected array: T[] = [];
+	protected storageKey: string;
+	private factory: (data: any) => T;
+
+	constructor(storageKey: string, factory: (data: any) => T) {
 		this.storageKey = storageKey;
+		this.factory = factory;
 		this.load();
 	}
 
-	private load(): void {
-		const localData = loadFromLocalStorage<T[]>(this.storageKey);
+	protected load(): void {
+		const localData = loadFromLocalStorage<any[]>(this.storageKey);
 		if (localData && localData.length > 0) {
-			this.array = localData.map((item) => ({ ...item }));
+			this.array = localData.map((data) => this.factory(data));
 		} else {
 			this.array = [];
 		}
 	}
 
-	private save(): void {
+	protected save(): void {
 		saveToLocalStorage(this.storageKey, this.array);
 	}
 
-	create(item: T): void {
-		this.array.push(item);
+	create(item: T): T {
+		const instance = this.factory(item);
+		this.array.push(instance);
 		this.save();
+		return instance;
 	}
 
 	getById(id: string): T | undefined {
-		console.log("getById called with id:", id, this.array);
-		return this.array.find((item: any) => item.id === id);
+		let item = this.array.find((item) => item.id === id);
+		console.log(item, "item", this.factory);
+		return this.array.find((item) => item.id === id);
 	}
 
 	update(id: string, updatedItem: T): boolean {
-		const index = this.array.findIndex((item: any) => item.id === id);
+		const index = this.array.findIndex((item) => item.id === id);
 		if (index === -1) return false;
-		this.array[index] = updatedItem;
+		this.array[index] = this.factory(updatedItem);
 		this.save();
 		return true;
 	}
 
 	delete(id: string): boolean {
-		const index = this.array.findIndex((item: any) => item.id === id);
+		const index = this.array.findIndex((item) => item.id === id);
 		if (index === -1) return false;
 		this.array.splice(index, 1);
 		this.save();

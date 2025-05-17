@@ -1,7 +1,7 @@
-import { BorrowedBookStatus } from "../enums/borrowBook.enum";
+import { BorrowedStatus } from "../enums/borrow.enum";
 import { IBorrowedBookDetails } from "../interfaces/borrowedBook.interface";
 import { ISelectOption } from "../interfaces/select.interface";
-import { BorrowedBook } from "../models/borrowedBook.model";
+import { Borrowed } from "../models/borrowed.model";
 import { dateToString, stringToDate } from "../utils";
 import {
 	enumToOptions,
@@ -65,7 +65,7 @@ export class BorrowedView {
 		});
 	}
 
-	setBorrowHandler(handle: (formData: any) => void): void {
+	setBorrowHandler(handle: (formData: Partial<Borrowed>) => void): void {
 		const form = this.getBorrowForm();
 		if (!form) return;
 
@@ -74,6 +74,7 @@ export class BorrowedView {
 			const formData = this.collectFormData();
 			handle(formData);
 			this.getBorrowDialog().close();
+			location.reload();
 		});
 	}
 
@@ -130,7 +131,7 @@ export class BorrowedView {
 		let statusSelect = this.getBorrowedStatusForm();
 		if (statusSelect) {
 			statusSelect.value = borrowedBook.status;
-			if (borrowedBook.status === BorrowedBookStatus.BORROWING) {
+			if (borrowedBook.status === BorrowedStatus.BORROWING) {
 				statusSelect.disabled = false;
 			} else {
 				statusSelect.disabled = true;
@@ -145,20 +146,20 @@ export class BorrowedView {
 		this.getBorrowDialog().showModal();
 	}
 
-	private collectFormData(): BorrowedBook {
+	private collectFormData(): Partial<Borrowed> {
 		const ELEMENTS_ID = BorrowedView.ELEMENT_IDS;
 		const statusValue = getSelectElementById(
 			ELEMENTS_ID.FORM_BORROW_STATUS
 		)?.value;
-		const status = Object.values(BorrowedBookStatus).includes(
-			statusValue as BorrowedBookStatus
+		const status = Object.values(BorrowedStatus).includes(
+			statusValue as BorrowedStatus
 		)
-			? (statusValue as BorrowedBookStatus)
-			: BorrowedBookStatus.BORROWING;
-		return <BorrowedBook>{
+			? (statusValue as BorrowedStatus)
+			: BorrowedStatus.BORROWING;
+		return {
 			id: getInputElementById(ELEMENTS_ID.FORM_BORROW_ID).value,
-			bookId: getSelectElementById(ELEMENTS_ID.FORM_BORROW_BOOK)?.value || "",
-			userId: getSelectElementById(ELEMENTS_ID.FORM_BORROW_USER)?.value || "",
+			bookId: getSelectElementById(ELEMENTS_ID.FORM_BORROW_BOOK)?.value,
+			userId: getSelectElementById(ELEMENTS_ID.FORM_BORROW_USER)?.value,
 			status: status,
 			borrowDay: stringToDate(
 				getInputElementById(ELEMENTS_ID.FORM_BORROW_DATE).value
@@ -207,7 +208,7 @@ export class BorrowedView {
 			BorrowedView.ELEMENT_IDS.FORM_BORROW_STATUS
 		);
 		if (borrowStatus) {
-			borrowStatus.innerHTML = enumToOptions(BorrowedBookStatus);
+			borrowStatus.innerHTML = enumToOptions(BorrowedStatus);
 		}
 		return borrowStatus;
 	}

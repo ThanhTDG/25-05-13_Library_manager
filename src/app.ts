@@ -6,14 +6,7 @@ import { UserView } from "./views/user.view";
 import { UserController } from "./controllers/user.controller";
 import { UserService } from "./services/user.service";
 
-
 export default function main() {
-    const libraryController = new LibraryController()
+	const libraryController = new LibraryController();
+	(window as any).openTab = libraryController.openTab.bind(libraryController);
 }
-const bookService = BookService.getInstance()
-const bookView = new BookView();
-const bookController = new BookController(bookService, bookView);
-
-const userService = UserService.getInstance();
-const userView = new UserView()
-const userController = new UserController(userService, userView)

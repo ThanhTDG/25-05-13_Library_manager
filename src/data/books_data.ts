@@ -1,82 +1,49 @@
-export const booksData = [
-    {
-        "id": "1",
-        "title": "Clean Code",
-        "author": "Robert C. Martin",
-        "isbn": "9780132350884",
-        "totalCopies": 10,
-        "availableCopies": 8
-    },
-    {
-        "id": "2",
-        "title": "The Pragmatic Programmer",
-        "author": "Andrew Hunt",
-        "isbn": "9780201616224",
-        "totalCopies": 5,
-        "availableCopies": 5
-    },
-    {
-        "id": "3",
-        "title": "You Don't Know JS",
-        "author": "Kyle Simpson",
-        "isbn": "9781491904244",
-        "totalCopies": 7,
-        "availableCopies": 7
-    },
-    {
-        "id": "4",
-        "title": "Eloquent JavaScript",
-        "author": "Marijn Haverbeke",
-        "isbn": "9781593279509",
-        "totalCopies": 6,
-        "availableCopies": 5
-    },
-    {
-        "id": "5",
-        "title": "JavaScript: The Good Parts",
-        "author": "Douglas Crockford",
-        "isbn": "9780596517748",
-        "totalCopies": 4,
-        "availableCopies": 4
-    },
-    {
-        "id": "6",
-        "title": "Design Patterns",
-        "author": "Erich Gamma",
-        "isbn": "9780201633610",
-        "totalCopies": 8,
-        "availableCopies": 6
-    },
-    {
-        "id": "7",
-        "title": "Refactoring",
-        "author": "Martin Fowler",
-        "isbn": "9780201485677",
-        "totalCopies": 9,
-        "availableCopies": 9
-    },
-    {
-        "id": "8",
-        "title": "Introduction to Algorithms",
-        "author": "Thomas H. Cormen",
-        "isbn": "9780262033848",
-        "totalCopies": 3,
-        "availableCopies": 2
-    },
-    {
-        "id": "9",
-        "title": "The Mythical Man-Month",
-        "author": "Frederick P. Brooks Jr.",
-        "isbn": "9780201835953",
-        "totalCopies": 5,
-        "availableCopies": 4
-    },
-    {
-        "id": "10",
-        "title": "Code Complete",
-        "author": "Steve McConnell",
-        "isbn": "9780735619678",
-        "totalCopies": 6,
-        "availableCopies": 6
-    }
-]
+import { Book } from "../models/book.model";
+
+export const booksData: Book[] = [
+	new Book("1", "Clean Code", "Robert C. Martin", "9780132350884", 10, 9), // 10 (totalCopies) - 1 (Borrowed)
+	new Book(
+		"2",
+		"The Pragmatic Programmer",
+		"Andrew Hunt",
+		"9780201616224",
+		5,
+		4
+	), // 5 (totalCopies) - 1 (Borrowed)
+	new Book("3", "You Don't Know JS", "Kyle Simpson", "9781491904244", 7, 6), // 7 (totalCopies) - 1 (Borrowed)
+	new Book(
+		"4",
+		"Eloquent JavaScript",
+		"Marijn Haverbeke",
+		"9781593279509",
+		6,
+		5
+	), // 6 (totalCopies) - 1 (Borrowed)
+	new Book(
+		"5",
+		"JavaScript: The Good Parts",
+		"Douglas Crockford",
+		"9780596517748",
+		4,
+		3
+	), // 4 (totalCopies) - 1 (Borrowed)
+	new Book("6", "Design Patterns", "Erich Gamma", "9780201633610", 8, 7), // 8 (totalCopies) - 1 (Borrowed)
+	new Book("7", "Refactoring", "Martin Fowler", "9780201485677", 9, 8), // 9 (totalCopies) - 1 (Borrowed)
+	new Book(
+		"8",
+		"Introduction to Algorithms",
+		"Thomas H. Cormen",
+		"9780262033848",
+		3,
+		2
+	), // 3 (totalCopies) - 1 (Borrowed)
+	new Book(
+		"9",
+		"The Mythical Man-Month",
+		"Frederick P. Brooks Jr.",
+		"9780201835953",
+		5,
+		4
+	), // 5 (totalCopies) - 1 (Borrowed)
+	new Book("10", "Code Complete", "Steve McConnell", "9780735619678", 6, 5), // 6 (totalCopies) - 1 (Borrowed)
+];

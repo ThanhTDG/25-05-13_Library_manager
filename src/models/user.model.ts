@@ -1,43 +1,28 @@
 import { generateId } from "../utils";
 
 export interface IUser {
-    id: string;
-    name: string;
-    dayCreated: Date;
-    borrowedBookIds: string[];
+	id: string;
+	name: string;
+	dayCreated: Date;
 }
 
 export class User implements IUser {
-    public name: string;
-    public id: string;
-    public dayCreated: Date;
-    public borrowedBookIds: string[];
+	public name: string;
+	public id: string;
+	public dayCreated: Date;
 
-    constructor(id: string, name: string, dateCreated: Date, borrowedBookIds: string[] = []) {
-        this.id = id;
-        this.name = name;
-        this.dayCreated = dateCreated;
-        this.borrowedBookIds = borrowedBookIds
-    }
-    static formIUser(user: Partial<IUser>): User {
-        const id = user.id || generateId();
-        const name = user.name || "Unknown";
-        const dayCreated = user.dayCreated ? new Date(user.dayCreated) : new Date();
-        const borrowedBookIds = user.borrowedBookIds || [];
-        return new User(id, name, dayCreated, borrowedBookIds);
-    }
-
-    borrowBook(bookId: string): void {
-        if (!this.borrowedBookIds.includes(bookId)) {
-            this.borrowedBookIds.push(bookId)
-        }
-    }
-    returnBook(bookId: string): void {
-        const index = this.borrowedBookIds.indexOf(bookId)
-        if (index > -1) {
-            this.borrowedBookIds.slice(index, 1)
-        }
-    }
-
-
+	constructor(id: string, name: string, dateCreated: Date) {
+		this.id = id;
+		this.name = name;
+		this.dayCreated = dateCreated;
+	}
+	static formIUser(user: Partial<IUser>): User {
+		const id = user.id || generateId();
+		const name = user.name || "Unknown";
+		const dayCreated = user.dayCreated ? new Date(user.dayCreated) : new Date();
+		return new User(id, name, dayCreated);
+	}
+	static fromJson(json: any): User {
+		return new User(json.id, json.name, new Date(json.dayCreated));
+	}
 }

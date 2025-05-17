@@ -1,0 +1,65 @@
+/* Styling for .select-form */
+.select-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 14px;
+    gap: 4px;
+}
+
+.select-form label {
+    min-width: unset;
+    margin-bottom: 2px;
+    font-weight: 500;
+    color: #333;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.select-form select {
+    flex: unset;
+    padding: 8px 12px;
+    border: 1.5px solid #bdbdbd;
+    border-radius: 6px;
+    font-size: 16px;
+    background: #f7fafd;
+    transition: border 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    height: 38px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23999'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+}
+
+.select-form select:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+    outline: none;
+}
+
+/* Form chung */
+#form-user,
+#form-borrow {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+#form-user-id,
+#form-date-create-user,
+#form-borrow-id,
+#form-borrow-date {
+    user-select: none;
+    pointer-events: none;
+    background: #ecececdc;
+}
+
+#create-book,
+#create-user,
+#create-borrow {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}

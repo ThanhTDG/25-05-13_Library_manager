@@ -90,7 +90,7 @@ export class UserView {
 		if (!form) return;
 
 		const ELEMENTS_IDS = UserView.ELEMENTS_IDS;
-		form.onsubmit = null; // Clear previous handlers
+		form.onsubmit = null;
 		form.addEventListener("submit", (event) => {
 			event.preventDefault();
 			const formData: Partial<IUser> = {
@@ -102,6 +102,7 @@ export class UserView {
 			};
 			handle(User.formIUser(formData));
 			this.getUserDialog().close();
+			location.reload();
 		});
 	}
 

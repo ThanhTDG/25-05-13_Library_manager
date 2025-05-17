@@ -5,6 +5,7 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1.0"
 		/>
+		<title>Library Manager</title>
 		<link
 			rel="stylesheet"
 			href="./src/css/utils.css"
@@ -26,322 +27,374 @@
 			href="./src/css/user.css"
 		/>
 		<link
-			href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
 			rel="stylesheet"
+			href="./src/css/tabs.css"
 		/>
-		<title>Library Manager</title>
-	</head>
-
-	<body>
-		<div id="library-manager">
-			<h1>Library Manager</h1>
-			<div class="library-manager-container">
-				<div id="book-manager-container">
-					<dialog
-						id="dialog-book"
-						method="dialog"
-					>
-						<form id="form-book">
-							<div class="input-form">
-								<label for="form-book-id">ID:</label>
-								<input
-									type="text"
-									id="form-book-id"
-									name="form-book-id"
-									readonly
-									tabindex="-1"
-								/>
-							</div>
-							<div class="input-form">
-								<label for="form-book-title">Title:</label>
-								<input
-									type="text"
-									id="form-book-title"
-									name="form-book-title"
-									required
-								/>
-							</div>
-							<div class="input-form">
-								<label for="form-book-author">Author:</label>
-								<input
-									type="text"
-									id="form-book-author"
-									name="form-book-author"
-									required
-								/>
-							</div>
-							<div class="input-form">
-								<label for="form-book-isbn">ISBN:</label>
-								<input
-									type="text"
-									id="form-book-isbn"
-									name="form-book-isbn"
-									required
-								/>
-							</div>
-
-							<div class="input-form">
-								<label for="form-book-total-copies">Total Copies:</label>
-								<input
-									type="number"
-									id="form-book-total-copies"
-									name="form-book-total-copies"
-									min="0"
-								/>
-							</div>
-							<div class="input-form">
-								<label for="form-book-available-copies"
-									>Available Copies:</label
-								>
-								<input
-									type="number"
-									id="form-book-available-copies"
-									name="form-book-available-copies"
-									required
-									readonly
-								/>
-							</div>
-							<menu>
-								<button
-									id="btn-cancel-form-book"
-									type="button"
-								>
-									Cancel
-								</button>
-								<button
-									id="btn-save-form-book"
-									type="submit"
-									value="default"
-								>
-									Save
-								</button>
-							</menu>
-						</form>
-					</dialog>
-					<div
-						id="book-table-container"
-						class="table-container"
-					>
-						<div id="create-book">
-							<button
-								id="btn-trigger-create-book"
-								class="btn-main"
-							>
-								Create Book
-							</button>
-						</div>
-						<table
-							id="book-table"
-							class="table-main"
-						>
-							<thead>
-								<tr>
-									<th>ID</th>
-									<th>Title</th>
-									<th>Author</th>
-									<th>ISBN</th>
-									<th>Available</th>
-									<th>Total</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
-					</div>
-					<div></div>
-				</div>
-				<div id="user-manager-container">
-					<dialog
-						id="dialog-user"
-						method="dialog"
-					>
-						<form id="form-user">
-							<div class="input-form">
-								<label for="form-user-id">ID:</label>
-								<input
-									type="text"
-									id="form-user-id"
-									name="form-user-id"
-									readonly
-									tabindex="-1"
-								/>
-							</div>
-							<div class="input-form">
-								<label for="form-user-name">Name:</label>
-								<input
-									type="text"
-									id="form-user-name"
-									name="form-user-name"
-									required
-								/>
-							</div>
-							<div class="input-form">
-								<label for="form-user-date-created">Date Created:</label>
-								<input
-									type="datetime-local"
-									id="form-date-create-user"
-									name="form-date-create-user"
-									readonly
-								/>
-							</div>
-							<menu>
-								<button
-									id="btn-cancel-form-user"
-									type="button"
-								>
-									Cancel
-								</button>
-								<button
-									id="btn-save-form-user"
-									type="submit"
-									value="default"
-								>
-									Save
-								</button>
-							</menu>
-						</form>
-					</dialog>
-					<div
-						id="user-table-container"
-						class="table-container"
-					>
-						<div id="create-user">
-							<button
-								id="btn-trigger-create-user"
-								class="btn-main"
-							>
-								Create User
-							</button>
-						</div>
-						<table
-							id="table-user"
-							class="table-main"
-						>
-							<thead>
-								<tr>
-									<th>ID</th>
-									<th>Name</th>
-									<th>Date Created</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody></tbody>
-						</table>
-					</div>
-				</div>
-			</div>
-
-			<div id="book-table"></div>
-			<ul id="book-list"></ul>
-		</div>
-		<div>
-			<dialog
-				id="dialog-borrow"
-				method="dialog"
-			>
-				<form id="form-borrow">
-					<div class="input-form">
-						<label for="form-borrow-id">Borrow ID:</label>
-						<input
-							type="text"
-							id="form-borrow-id"
-							name="form-borrow-id"
-							readonly
-							tabindex="-1"
-						/>
-					</div>
-					<div class="select-form">
-						<select
-							id="form-select-borrow-book"
-							class="form-select"
-							required
-						>
-							<option value="">Select Book</option>
-						</select>
-					</div>
-					<div class="select-form">
-						<select
-							id="form-select-borrow-user"
-							class="form-select"
-							required
-						>
-							<option value="">Select User</option>
-						</select>
-					</div>
-					<div class="select-form">
-						<select
-							id="form-select-borrow-status"
-							class="form-select"
-							required
-						>
-							<option value="">Select User</option>
-						</select>
-					</div>
-					<div class="input-form">
-						<label for="form-borrow-date">Borrow Date:</label>
-						<input
-							type="datetime-local"
-							id="form-borrow-date"
-							name="form-borrow-date"
-							disabled
-							tabindex="-1"
-						/>
-					</div>
-					<menu>
-						<button
-							id="btn-cancel-form-borrow"
-							type="button"
-						>
-							Cancel
-						</button>
-						<button
-							id="btn-save-form-borrow"
-							type="submit"
-							value="default"
-						>
-							Save
-						</button>
-					</menu>
-				</form>
-			</dialog>
-			<div
-				id="borrow-table-container"
-				class="table-container"
-			>
-				<div id="create-borrow">
-					<button
-						id="btn-trigger-create-borrow"
-						class="btn-main"
-					>
-						Create Borrow
-					</button>
-				</div>
-				<table
-					id="borrowed-table"
-					class="table-main"
-				>
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Book Title</th>
-							<th>User Name</th>
-							<th>Borrow Date</th>
-							<th>Updated Date</th>
-							<th>Status</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
-			</div>
-		</div>
-		<script src="../dist/bundle.js"></script>
-		<!-- jQuery -->
-		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-		<!-- Select2 CSS & JS -->
+		<link
+			rel="stylesheet"
+			href="./src/css/tab.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="./src/css/borrow.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="./src/css/form.css"
+		/>
 		<link
 			href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
 			rel="stylesheet"
 		/>
+	</head>
+	<body>
+		<div id="library-manager">
+			<h1>Library Manager</h1>
+			<div class="tabs-container">
+				<div class="tabs-nav vertical">
+					<button
+						class="tab-link active"
+						onclick="openTab(event, 'bookManagementTab')"
+					>
+						Quản lý Sách
+					</button>
+					<button
+						class="tab-link"
+						onclick="openTab(event, 'userManagementTab')"
+					>
+						Quản lý User
+					</button>
+					<button
+						class="tab-link"
+						onclick="openTab(event, 'borrowManagementTab')"
+					>
+						Quản lý Mượn/Trả
+					</button>
+				</div>
+				<div class="tabs-content">
+					<!-- Book Management Tab -->
+					<div
+						id="bookManagementTab"
+						class="tab-content active"
+					>
+						<dialog
+							id="dialog-book"
+							method="dialog"
+						>
+							<form
+								id="form-book"
+								class="form-common"
+							>
+								<div class="input-form">
+									<label for="form-book-id">ID:</label>
+									<input
+										type="text"
+										id="form-book-id"
+										name="form-book-id"
+										readonly
+										tabindex="-1"
+									/>
+								</div>
+								<div class="input-form">
+									<label for="form-book-title">Title:</label>
+									<input
+										type="text"
+										id="form-book-title"
+										name="form-book-title"
+										required
+									/>
+								</div>
+								<div class="input-form">
+									<label for="form-book-author">Author:</label>
+									<input
+										type="text"
+										id="form-book-author"
+										name="form-book-author"
+										required
+									/>
+								</div>
+								<div class="input-form">
+									<label for="form-book-isbn">ISBN:</label>
+									<input
+										type="text"
+										id="form-book-isbn"
+										name="form-book-isbn"
+										required
+									/>
+								</div>
+								<div class="input-form">
+									<label for="form-book-total-copies">Total Copies:</label>
+									<input
+										type="number"
+										id="form-book-total-copies"
+										name="form-book-total-copies"
+										min="0"
+									/>
+								</div>
+								<div class="input-form">
+									<label for="form-book-available-copies"
+										>Available Copies:</label
+									>
+									<input
+										type="number"
+										id="form-book-available-copies"
+										name="form-book-available-copies"
+										required
+										readonly
+									/>
+								</div>
+								<menu>
+									<button
+										id="btn-cancel-form-book"
+										type="button"
+									>
+										Cancel
+									</button>
+									<button
+										id="btn-save-form-book"
+										type="submit"
+										value="default"
+									>
+										Save
+									</button>
+								</menu>
+							</form>
+						</dialog>
+						<div
+							id="book-table-container"
+							class="table-container"
+						>
+							<div id="create-book">
+								<button
+									id="btn-trigger-create-book"
+									class="btn-main"
+								>
+									Create Book
+								</button>
+							</div>
+							<table
+								id="book-table"
+								class="table-main"
+							>
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Title</th>
+										<th>Author</th>
+										<th>ISBN</th>
+										<th>Available</th>
+										<th>Total</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+
+					<!-- User Management Tab -->
+					<div
+						id="userManagementTab"
+						class="tab-content"
+					>
+						<dialog
+							id="dialog-user"
+							method="dialog"
+						>
+							<form
+								id="form-user"
+								class="form-common"
+							>
+								<div class="input-form">
+									<label for="form-user-id">ID:</label>
+									<input
+										type="text"
+										id="form-user-id"
+										name="form-user-id"
+										readonly
+										tabindex="-1"
+									/>
+								</div>
+								<div class="input-form">
+									<label for="form-user-name">Name:</label>
+									<input
+										type="text"
+										id="form-user-name"
+										name="form-user-name"
+										required
+									/>
+								</div>
+								<div class="input-form">
+									<label for="form-user-date-created">Date Created:</label>
+									<input
+										type="datetime-local"
+										id="form-date-create-user"
+										name="form-date-create-user"
+										readonly
+									/>
+								</div>
+								<menu>
+									<button
+										id="btn-cancel-form-user"
+										type="button"
+									>
+										Cancel
+									</button>
+									<button
+										id="btn-save-form-user"
+										type="submit"
+										value="default"
+									>
+										Save
+									</button>
+								</menu>
+							</form>
+						</dialog>
+						<div
+							id="user-table-container"
+							class="table-container"
+						>
+							<div id="create-user">
+								<button
+									id="btn-trigger-create-user"
+									class="btn-main"
+								>
+									Create User
+								</button>
+							</div>
+							<table
+								id="table-user"
+								class="table-main"
+							>
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Name</th>
+										<th>Date Created</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+
+					<!-- Borrow Management Tab -->
+					<div
+						id="borrowManagementTab"
+						class="tab-content"
+					>
+						<dialog
+							id="dialog-borrow"
+							method="dialog"
+						>
+							<form
+								id="form-borrow"
+								class="form-common"
+							>
+								<div class="input-form">
+									<label for="form-borrow-id">Borrow ID:</label>
+									<input
+										type="text"
+										id="form-borrow-id"
+										name="form-borrow-id"
+										readonly
+										tabindex="-1"
+									/>
+								</div>
+								<div class="select-form">
+									<label for="form-select-borrow-book">Book:</label>
+									<select
+										id="form-select-borrow-book"
+										class="form-select"
+										required
+									>
+										<option value="">Select Book</option>
+									</select>
+								</div>
+								<div class="select-form">
+									<label for="form-select-borrow-user">User:</label>
+									<select
+										id="form-select-borrow-user"
+										class="form-select"
+										required
+									>
+										<option value="">Select User</option>
+									</select>
+								</div>
+								<div class="select-form">
+									<label for="form-select-borrow-status">Status:</label>
+									<select
+										id="form-select-borrow-status"
+										class="form-select"
+										required
+									>
+										<option value="">Select Status</option>
+									</select>
+								</div>
+								<div class="input-form">
+									<label for="form-borrow-date">Borrow Date:</label>
+									<input
+										type="datetime-local"
+										id="form-borrow-date"
+										name="form-borrow-date"
+										disabled
+										tabindex="-1"
+									/>
+								</div>
+								<menu>
+									<button
+										id="btn-cancel-form-borrow"
+										type="button"
+									>
+										Cancel
+									</button>
+									<button
+										id="btn-save-form-borrow"
+										type="submit"
+										value="default"
+									>
+										Save
+									</button>
+								</menu>
+							</form>
+						</dialog>
+						<div
+							id="borrow-table-container"
+							class="table-container"
+						>
+							<div id="create-borrow">
+								<button
+									id="btn-trigger-create-borrow"
+									class="btn-main"
+								>
+									Create Borrow Record
+								</button>
+							</div>
+							<table
+								id="borrowed-table"
+								class="table-main"
+							>
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Book Title</th>
+										<th>User Name</th>
+										<th>Borrow Date</th>
+										<th>Updated Date</th>
+										<th>Status</th>
+									</tr>
+								</thead>
+								<tbody></tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+		<script src="../dist/bundle.js"></script>
 	</body>
 </html>

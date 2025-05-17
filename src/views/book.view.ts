@@ -1,4 +1,5 @@
-import { IBook } from "../models/book.model";
+import { get } from "jquery";
+import { Book } from "../models/book.model";
 import {
 	getButtonById,
 	getDialogElementById,
@@ -33,7 +34,7 @@ export class BookView {
 		return getFormElementById(BookView.ELEMENT_IDS.BOOK_FORM);
 	}
 
-	setBookHandler(handle: (formData: IBook) => void): void {
+	setBookHandler(handle: (formData: Partial<Book>) => void): void {
 		const form = this.getBookForm();
 		if (!form) return;
 
@@ -41,9 +42,9 @@ export class BookView {
 			event.preventDefault();
 			const formData = this.collectFormData();
 			if (!formData) return;
-
 			handle(formData);
 			this.getBookDialog().close();
+			location.reload();
 		});
 	}
 
@@ -75,7 +76,7 @@ export class BookView {
 		});
 	}
 
-	populateForm(book: IBook): void {
+	populateForm(book: Book): void {
 		const ELEMENTS_ID = BookView.ELEMENT_IDS;
 		getInputElementById(ELEMENTS_ID.FORM_ID).value = book.id;
 		getInputElementById(ELEMENTS_ID.FORM_TITLE).value = book.title;
@@ -83,14 +84,22 @@ export class BookView {
 		getInputElementById(ELEMENTS_ID.FORM_ISBN).value = book.isbn;
 		getInputElementById(ELEMENTS_ID.FORM_AVAILABLE_COPIES).valueAsNumber =
 			book.availableCopies;
-		getInputElementById(ELEMENTS_ID.FORM_TOTAL_COPIES).valueAsNumber =
-			book.totalCopies;
+		this._setTotalCopiesInput(book);
 		this.getBookDialog().showModal();
 	}
 
+	private _setTotalCopiesInput(book: Book): void {
+		const borrowedCopies = book.totalCopies - book.availableCopies;
+		const totalCopiesInput = getInputElementById(
+			BookView.ELEMENT_IDS.FORM_TOTAL_COPIES
+		);
+		totalCopiesInput.setAttribute("min", borrowedCopies.toString());
+		totalCopiesInput.valueAsNumber = book.totalCopies;
+	}
+
 	renderBooks(
-		bookList: IBook[],
-		onRowClick: (book: IBook) => void,
+		bookList: Book[],
+		onRowClick: (book: Book) => void,
 		onDeleteClick: (bookId: string) => void
 	): void {
 		const tableBody = document.querySelector("#book-table tbody");
@@ -128,7 +137,7 @@ export class BookView {
 		});
 	}
 
-	private collectFormData(): IBook | null {
+	private collectFormData(): Partial<Book> | null {
 		const ELEMENTS_ID = BookView.ELEMENT_IDS;
 
 		const id =
@@ -143,14 +152,8 @@ export class BookView {
 			ELEMENTS_ID.FORM_AVAILABLE_COPIES
 		).valueAsNumber;
 
-		if (
-			!title ||
-			!author ||
-			!isbn ||
-			totalCopies <= 0 ||
-			availableCopies > totalCopies
-		) {
-			alert("Invalid form data. Please check your inputs.");
+		if (!title || !author || !isbn) {
+			alert("Please fill in all fields.");
 			return null;
 		}
 
@@ -159,8 +162,8 @@ export class BookView {
 			title,
 			author,
 			isbn,
-			availableCopies,
 			totalCopies,
+			availableCopies,
 		};
 	}
 }

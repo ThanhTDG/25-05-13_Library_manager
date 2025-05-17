@@ -3,19 +3,19 @@ import { User } from "../models/user.model";
 import { usersData } from "../data/users_data";
 
 export class UserService extends BaseService<User> {
-    private static instance: UserService;
+	private static instance: UserService;
 
-    private constructor() {
-        super("users");
-        if (this.getAll().length === 0) {
-            usersData.forEach(user => this.create(user));
-        }
-    }
+	private constructor() {
+		super("users", (data) => User.fromJson(data));
+		if (this.getAll().length === 0) {
+			usersData.forEach((user) => this.create(user));
+		}
+	}
 
-    static getInstance(): UserService {
-        if (!UserService.instance) {
-            UserService.instance = new UserService();
-        }
-        return UserService.instance;
-    }
+	static getInstance(): UserService {
+		if (!UserService.instance) {
+			UserService.instance = new UserService();
+		}
+		return UserService.instance;
+	}
 }
