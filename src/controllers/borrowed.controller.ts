@@ -148,7 +148,7 @@ export class BorrowedController {
 			return;
 		}
 		const hasId = "id" in updateBorrow;
-		const hasStatus = !!updateBorrow.status;
+		const hasStatus = "status" in updateBorrow;
 		if (hasId && hasStatus) {
 			this.updateBorrow(
 				<string>updateBorrow.id,
